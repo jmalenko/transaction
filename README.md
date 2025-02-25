@@ -27,9 +27,17 @@ Run TransactionControllerTest.
 
 ### Database
 
-```
-docker compose -f docker/docker-compose.yml -p docker up -d db
+Start database in docker.
 
+```
+docker compose -f docker/docker-compose.yml -p docker_transaction up -d db
+```
+
+In the dev profile (which is active), database structure is updated automatically based on the model.
+
+The following may be useful for deploying to production (prod profile).
+
+```
 apt-get install mysql-client
 
 mysql -h 127.0.0.1 -P 3306 -u user -D db -p
@@ -44,20 +52,17 @@ CREATE TABLE transaction (
 CREATE TABLE key_value (
     id              bigint primary key auto_increment,
     transaction_id  bigint,
---    transaction  bigint,
---    transaction_key  bigint,
     key_            varchar(64),
     value           varchar(64),
     foreign key (transaction_id) references transaction(id)
 );
-
 ```
 
-### Package
+### Package and Run
 
 ```
 ./mvnw clean package
-java -jar target/...
+java -jar target/transaction-0.0.1-SNAPSHOT.jar
 ```
 
 ## Improvements
