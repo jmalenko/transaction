@@ -1,0 +1,15 @@
+meta {
+  name: Find by data key
+  type: http
+  seq: 12
+}
+
+get {
+  url: http://localhost:8080/transaction/search/data/key0
+  body: none
+  auth: none
+}
+
+body:json {
+  {"id":5190,"timestamp":1739805933291,"type":"type1","actor":"actor1","data":[]}
+}
