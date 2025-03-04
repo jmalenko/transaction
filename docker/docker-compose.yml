@@ -3,7 +3,7 @@ services:
     build: ..
     environment:
       # Note: in the hostname, we must use the name of the database container (so its "db" instead of typical "locahost")
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/db
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/db
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_LOGGING_LEVEL_ROOT: INFO
