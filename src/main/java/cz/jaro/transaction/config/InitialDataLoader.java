@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Component
 @Slf4j
@@ -39,7 +39,10 @@ public class InitialDataLoader implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-//        transactionRepository.deleteAll();
+        transactionRepository.deleteAll();
+        statementRepository.deleteAll();
+        accountRepository.deleteAll();
+        transactionTypeRepository.deleteAll();
 
         if (transactionRepository.count() == 0) {
             log.info("Initializing database");
@@ -63,8 +66,8 @@ public class InitialDataLoader implements CommandLineRunner {
             transaction.setId("20221019:0000000219");
             transaction.setBankref("PS221019SO314822");
             transaction.setTransactionId("4831716");
-            transaction.setBookingDate(new Date()); // TODO "2022-10-19"
-            transaction.setPostingDate(new Date()); // TODO "2022-10-19"
+            transaction.setBookingDate(LocalDate.of(2022, 10, 19));
+            transaction.setPostingDate(LocalDate.of(2022, 10, 19));
             transaction.setCreditDebitIndicator("CRDT");
             transaction.setOwnAccountNumber("2002222222");
             transaction.setCounterPartyAccount(counterPartyAccount);

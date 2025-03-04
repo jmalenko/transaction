@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 
 @NoArgsConstructor
@@ -24,10 +24,10 @@ public class TransactionDTO {
     private String transactionId;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date bookingDate;
+    private LocalDate bookingDate;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date postingDate;
+    private LocalDate postingDate;
 
     private String creditDebitIndicator;
 

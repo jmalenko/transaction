@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
@@ -59,8 +59,8 @@ public class TransactionService {
         transaction.setId("Id");
         transaction.setBankref("Bankref");
         transaction.setTransactionId("TransactionId");
-        transaction.setBookingDate(null);
-        transaction.setPostingDate(new Date());
+        transaction.setBookingDate(LocalDate.now());
+        transaction.setPostingDate(LocalDate.now());
         transaction.setCreditDebitIndicator("+");
         transaction.setOwnAccountNumber(ownAccountNumber);
         transaction.setDetail1("Detail1");

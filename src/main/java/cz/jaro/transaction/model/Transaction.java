@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 
 @Entity
@@ -36,10 +36,10 @@ public class Transaction {
     private String transactionId;
 
     @Column(name = "bookingDate")
-    private Date bookingDate;
+    private LocalDate bookingDate;
 
     @Column(name = "postingDate")
-    private Date postingDate;
+    private LocalDate postingDate;
 
     @Column(name = "creditDebitIndicator")
     private String creditDebitIndicator;
