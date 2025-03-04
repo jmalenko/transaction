@@ -1,78 +1,83 @@
 package cz.jaro.transaction.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.domain.Persistable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.Date;
 
-/*
-Implementation notes:
-- The id is always defined. This breaks the default implementation of repository.save() that decides whether to use
-  INSERT or UPDATE SQL command. In isNew() we force the INSERT and handle duplicate entry by catching the exception.
-- Although data is a map in the requirement, we are persisting it as list. This is because JPA doesn't support map.
- */
 
 @Entity
+@Table(name = "transaction")
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Transaction implements Persistable<Long> {
+public class Transaction {
     @Id
     @NotNull
-    private Long id;
+    @Column(name = "trxId")
+    private Long trxId;
 
-    private Long timestamp;
+    private BigDecimal amount;
 
-    private String type;
+    private String currency;
 
-    private String actor;
+    private String id;
 
-    @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<KeyValue> data = new ArrayList<>();
+    private String bankref;
 
-    public void addData(KeyValue keyValue) {
-        data.add(keyValue);
-        keyValue.setTransaction(this);
-    }
+    @Column(name = "transactionId")
+    private String transactionId;
 
-    public void removeData(KeyValue keyValue) {
-        data.remove(keyValue);
-        keyValue.setTransaction(null);
-    }
+    @Column(name = "bookingDate")
+    private Date bookingDate;
 
-    public void disconnectBidirectionalRelationships() {
-        data.forEach(keyValue -> keyValue.setTransaction(null));
-        data.clear();
-    }
+    @Column(name = "postingDate")
+    private Date postingDate;
 
-    @Override
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "creditDebitIndicator")
+    private String creditDebitIndicator;
 
-    @Override
-    public boolean isNew() {
-        return true;
-    }
+    @Column(name = "ownAccountNumber")
+    private String ownAccountNumber;
 
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "id=" + id +
-                ", timestamp=" + timestamp +
-                ", type='" + type + '\'' +
-                ", actor='" + actor + '\'' +
-                '}';
-    }
+    @ManyToOne
+    @JoinColumn(name = "counterPartyAccount")
+    private Account counterPartyAccount;
+
+    private String detail1;
+
+    private String detail2;
+
+    private String detail3;
+
+    private String detail4;
+
+    @Column(name = "productBankRef")
+    private String productBankRef;
+
+    @ManyToOne
+    @JoinColumn(name = "transactionType")
+    private TransactionType transactionType;
+
+    @ManyToOne
+    @JoinColumn(name = "statement")
+    private Statement statement;
+
+    @Column(name = "constantSymbol")
+    private String constantSymbol;
+
+    @Column(name = "specificSymbol")
+    private String specificSymbol;
+
+    @Column(name = "variableSymbol")
+    private String variableSymbol;
 
 }
 

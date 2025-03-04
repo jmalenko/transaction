@@ -1,73 +1,86 @@
 package cz.jaro.transaction.service;
 
-import cz.jaro.transaction.model.KeyValue;
+import cz.jaro.transaction.model.Account;
+import cz.jaro.transaction.model.Statement;
 import cz.jaro.transaction.model.Transaction;
+import cz.jaro.transaction.model.TransactionType;
+import cz.jaro.transaction.repository.AccountRepository;
+import cz.jaro.transaction.repository.StatementRepository;
 import cz.jaro.transaction.repository.TransactionRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cz.jaro.transaction.repository.TransactionTypeRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Service
+@Slf4j
 public class TransactionService {
-
-    private static final Logger log = LoggerFactory.getLogger(TransactionService.class);
-
-    private static final String TYPE = "counter";
-
-    private static final String KEY_COUNTER = "counter";
-    private static final String KEY_MODIFIED = "modified";
 
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private TransactionTypeRepository transactionTypeRepository;
+
+    @Autowired
+    private StatementRepository statementRepository;
+
+    public List<Transaction> transactions(String ownAccountNumber) {
+        return transactionRepository.findAllByOwnAccountNumber(ownAccountNumber);
+    }
+
     @Transactional
-    public int increaseCounters() {
-        List<Transaction> transactions = transactionRepository.findAllByType(TYPE);
-
-        // Business logic
-        log.info("Processing " + transactions.size() + " transactions");
-        transactions.forEach(this::increaseCounter);
-
-        return transactions.size();
-    }
-
-    public void increaseCounter(Transaction transaction) {
-        // Increase counter
-        KeyValue keyValueCounter = getTransactionDataKey(transaction, KEY_COUNTER);
-        if (keyValueCounter == null) {
-            keyValueCounter = new KeyValue(null, null, KEY_COUNTER, String.valueOf(1));
-            transaction.addData(keyValueCounter);
-        } else {
-            try {
-                long value = Long.decode(keyValueCounter.getValue());
-                value++;
-                keyValueCounter.setValue(String.valueOf(value));
-            } catch (Exception e) {
-                log.debug("Cannot update counter for transaction id " + transaction.getId());
-                keyValueCounter.setValue(String.valueOf(1));
-            }
+    public Transaction createTransaction(String ownAccountNumber) {
+        // Generate the TrxId
+        // Use the maximum existing TrxId + 1
+        Long maxTrxId = null;
+        for (Transaction transaction : transactionRepository.findAll()) {
+            if (maxTrxId == null || maxTrxId < transaction.getTrxId())
+                maxTrxId = transaction.getTrxId();
         }
 
-        // Set modified
-        KeyValue keyValueModified = getTransactionDataKey(transaction, KEY_MODIFIED);
-        if (keyValueModified == null) {
-            keyValueModified = new KeyValue(null, null, KEY_MODIFIED, null);
-            transaction.addData(keyValueModified);
-        }
-        keyValueModified.setValue(new Date().toString());
-    }
+        // Create transaction
+        Transaction transaction = new Transaction();
 
-    public KeyValue getTransactionDataKey(Transaction transaction, String key) {
-        for (KeyValue keyValue : transaction.getData()) {
-            if (keyValue.getKey().equals(key))
-                return keyValue;
-        }
-        return null;
-    }
+        transaction.setTrxId(maxTrxId + 1);
+        int whole = new Random().nextInt(100);
+        int decimal = new Random().nextInt(100);
+        transaction.setAmount(new BigDecimal(whole + "." + decimal));
+        transaction.setCurrency("CZK");
+        transaction.setId("Id");
+        transaction.setBankref("Bankref");
+        transaction.setTransactionId("TransactionId");
+        transaction.setBookingDate(null);
+        transaction.setPostingDate(new Date());
+        transaction.setCreditDebitIndicator("+");
+        transaction.setOwnAccountNumber(ownAccountNumber);
+        transaction.setDetail1("Detail1");
+        transaction.setDetail2("Detail2");
+        transaction.setDetail3("Detail3");
+        transaction.setDetail4(null);
+        transaction.setProductBankRef("ProductBankRef");
+        transaction.setConstantSymbol("KS");
+        transaction.setSpecificSymbol("SS");
+        transaction.setVariableSymbol("VS");
 
+        // Foreign entities - just use an existing entity
+        Account counterPartyAccount = accountRepository.findAll().get(0);
+        TransactionType transactionType = transactionTypeRepository.findAll().get(0);
+        Statement statement = statementRepository.findAll().get(0);
+
+        transaction.setCounterPartyAccount(counterPartyAccount);
+        transaction.setTransactionType(transactionType);
+        transaction.setStatement(statement);
+
+        return transactionRepository.save(transaction);
+    }
 }
