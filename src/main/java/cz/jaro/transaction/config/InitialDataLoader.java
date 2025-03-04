@@ -63,8 +63,8 @@ public class InitialDataLoader implements CommandLineRunner {
             transaction.setId("20221019:0000000219");
             transaction.setBankref("PS221019SO314822");
             transaction.setTransactionId("4831716");
-            transaction.setBookingDate(null); // "2022-10-19"
-            transaction.setPostingDate(new Date()); // "2022-10-19"
+            transaction.setBookingDate(new Date()); // TODO "2022-10-19"
+            transaction.setPostingDate(new Date()); // TODO "2022-10-19"
             transaction.setCreditDebitIndicator("CRDT");
             transaction.setOwnAccountNumber("2002222222");
             transaction.setCounterPartyAccount(counterPartyAccount);
