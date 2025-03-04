@@ -39,10 +39,10 @@ public class InitialDataLoader implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        transactionRepository.deleteAll();
-        statementRepository.deleteAll();
-        accountRepository.deleteAll();
-        transactionTypeRepository.deleteAll();
+//        transactionRepository.deleteAll();
+//        statementRepository.deleteAll();
+//        accountRepository.deleteAll();
+//        transactionTypeRepository.deleteAll();
 
         if (transactionRepository.count() == 0) {
             log.info("Initializing database");
@@ -72,7 +72,7 @@ public class InitialDataLoader implements CommandLineRunner {
             transaction.setOwnAccountNumber("2002222222");
             transaction.setCounterPartyAccount(counterPartyAccount);
             transaction.setDetail1("Posílám peníze");
-            transaction.setDetail2(null); // in out put only when not null
+            transaction.setDetail2(null);
             transaction.setDetail3(null);
             transaction.setDetail4(null);
             transaction.setProductBankRef("PS221019SO314822");
