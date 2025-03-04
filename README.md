@@ -7,13 +7,13 @@ Precondition: Database (with structures). See below for setup in a lower environ
 Start system
 
 ```
-docker compose -f wallet-be/docker/docker-compose.yml -p transaction-ppfbanka up
+docker compose -f docker/docker-compose.yml -p transaction-ppfbanka up
 ```
 
-Send REST requests to http://localhost:8080/ , e.g.
+Send REST requests like:
 
 ```
-GET /accounts/2002222222/transactions
+GET http://localhost:8080/accounts/2002222222/transactions
 ```
 
 ## Assignment

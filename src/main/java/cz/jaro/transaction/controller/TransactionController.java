@@ -50,13 +50,13 @@ public class TransactionController {
 
         transactionDTO.setAmount(new AmountDTO(transaction.getCurrency(), transaction.getAmount()));
         transactionDTO.setBankref(transaction.getBankref());
-        transactionDTO.setBookingDate(transaction.getBookingDate()); // TODO format YYYY-MM-DD
+        transactionDTO.setBookingDate(transaction.getBookingDate());
         transactionDTO.setCounterPartyAccount(new AccountDTO(transaction.getCounterPartyAccount().getName(), transaction.getCounterPartyAccount().getNumber(), transaction.getCounterPartyAccount().getCode()));
         transactionDTO.setCreditDebitIndicator(transaction.getCreditDebitIndicator());
         transactionDTO.setDetails(new DetailsDTO(transaction.getDetail1(), transaction.getDetail2(), transaction.getDetail3(), transaction.getDetail4()));
         transactionDTO.setId(transaction.getId());
         transactionDTO.setOwnAccountNumber(transaction.getOwnAccountNumber());
-        transactionDTO.setPostingDate(transaction.getPostingDate()); // TODO format YYYY-MM-DD
+        transactionDTO.setPostingDate(transaction.getPostingDate());
         transactionDTO.setProductBankRef(transaction.getProductBankRef());
         transactionDTO.setSpecificSymbol(transaction.getSpecificSymbol());
 
